@@ -5,11 +5,9 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes.js");
 const chatRoutes = require("./routes/chatRoutes.js");
 const messageRoutes = require("./routes/messageRoutes.js");
-
 dotenv.config();
 
 // Connect to the database
-connectDB();
 
 const app = express();
 
@@ -19,14 +17,26 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 1234;
 
+let server
+
+connectDB()
+    .then(() => {
+         server = app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error("MongoDB connection failed:", err);
+    });
+
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// const server = app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
 
 const io = require('socket.io')(server, {
     pingTimeout: 60000,
