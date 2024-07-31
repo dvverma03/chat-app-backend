@@ -12,7 +12,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: "https://chat-app-frontend-03.vercel.app" || "http://localhost:3000",
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -29,7 +29,7 @@ const server = app.listen(PORT, () => console.log(`Server is running on ${PORT}`
 const io = require('socket.io')(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: "https://chat-app-frontend-03.vercel.app" || "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true,
     transports: ['websocket', 'polling'],
