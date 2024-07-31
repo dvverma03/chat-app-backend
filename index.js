@@ -15,7 +15,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-  origin:  "http://localhost:3000",
+  origin:  ["http://localhost:3000",process.env.FRONTEND_URL],
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -34,7 +34,7 @@ const httpServer = createServer(app);
 // Create Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin:"http://localhost:3000",
+    origin:["http://localhost:3000",process.env.FRONTEND_URL],
     methods: ["GET", "POST"],
     credentials: true
   }
