@@ -2,12 +2,14 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
 const cors = require("cors");
+
 dotenv.config();
 const userRoutes = require("./routes/userRoutes.js");
 const chatRoutes = require("./routes/chatRoutes.js");
 const messageRoutes = require("./routes/messageRoutes.js");
 
 connectDB();
+
 const app = express();
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
