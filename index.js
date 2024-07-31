@@ -2,8 +2,11 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db.js");
 const cors = require("cors");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 dotenv.config();
+
 const userRoutes = require("./routes/userRoutes.js");
 const chatRoutes = require("./routes/chatRoutes.js");
 const messageRoutes = require("./routes/messageRoutes.js");
@@ -12,7 +15,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin:  "http://localhost:3000",
   methods: ["GET", "POST"],
   credentials: true
 }));
@@ -20,24 +23,24 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 1234;
 
+// Define routes
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-const server = app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
-
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-
+// Create HTTP server
 const httpServer = createServer(app);
+
+// Create Socket.IO server
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin:"http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
+// Socket.IO event handling
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
@@ -72,4 +75,5 @@ io.on("connection", (socket) => {
   });
 });
 
+// Start server
 httpServer.listen(PORT, () => console.log(`Server is running on ${PORT}`));
